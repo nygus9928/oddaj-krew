@@ -61,12 +61,6 @@
 			}
 	}
 	}
-//	$pkt=$u_result-$r_result;
-//	echo $pkt;
-	//if ($u_result>=$r_result) {
 
-		//	} else {
-		//	echo "Brak wymaganej ilości punktów";
-	//}
 	$polaczenie->close();
 ?>
