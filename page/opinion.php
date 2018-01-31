@@ -1,4 +1,5 @@
 <div class="col-lg-9">
+  
     <?php
     require_once "cnt/connect.php";
 

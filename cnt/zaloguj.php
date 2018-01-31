@@ -1,13 +1,13 @@
 <?php
 
 	session_start();
-	
+
 	if ((!isset($_POST['login'])) || (!isset($_POST['haslo'])))
 	{
 
 		header('Location: ../index.php?page=zaloguj');
 		exit();
-		
+
 	}
 
 	require_once "connect.php";
@@ -23,9 +23,9 @@
 	{
 		$login = $_POST['login'];
 		$haslo = $_POST['haslo'];
-		
-		
-	
+
+
+
 		if ($rezultat = @$polaczenie->query(
 		sprintf("SELECT * FROM uzytkownicy WHERE email='%s'",
 		mysqli_real_escape_string($polaczenie,$login))))
@@ -33,9 +33,9 @@
 			$ilu_userow = $rezultat->num_rows;
 			if($ilu_userow>0)
 			{
-				
+
 				$wiersz = $rezultat->fetch_assoc();
-				
+
 				if (password_verify($haslo, $wiersz['haslo']))
 				{
 					$_SESSION['zalogowany'] = true;
@@ -43,8 +43,7 @@
 					$_SESSION['imie'] = $wiersz['imie'];
 					$_SESSION['nazwisko'] = $wiersz['nazwisko'];
 					$_SESSION['email'] = $wiersz['email'];
-					$_SESSION['data_rej'] = $wiersz['data_rej'];
-					$_SESSION['pesel'] = $wiersz['u_pesel'];
+					$_SESSION['pesel'] = $wiersz['pesel'];
 					$_SESSION['gr_krwi'] = $wiersz['gr_krwi'];
 					$_SESSION['punkty'] = $wiersz['pkt'];
 
@@ -52,22 +51,22 @@
 					$rezultat->free_result();
 					header('Location: ../index.php?page=home');
 				}
-				else 
+				else
 				{
 					$_SESSION['blad'] = 'Nieprawidłowy login lub hasło!';
 					header('Location: ../index.php?page=zaloguj');
 				}
-				
+
 			} else {
-				
+
 				$_SESSION['blad'] = 'Nieprawidłowy login lub hasło!';
 				header('Location: ../index.php?page=zaloguj');
-				
+
 			}
-			
+
 		}
-		
+
 		$polaczenie->close();
 	}
-	
+
 ?>

@@ -2,7 +2,7 @@
 
 	session_start();
 
-	if (isset($_POST['email']))
+	if (isset($_POST['imie']))
 	{
 		//Udana walidacja? Załóżmy, że tak!
 		$wszystko_OK=true;
@@ -48,16 +48,6 @@
 			$_SESSION['e_pesel']="Pesel może składać się tylko z cyfr";
 		}
 
-		// Sprawdź poprawność adresu email
-		$email = $_POST['email'];
-		$emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-		if ((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email))
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_email']="Podaj poprawny adres e-mail!";
-		}
-
 		//Sprawdź poprawność hasła
 		$haslo1 = $_POST['haslo1'];
 		$haslo2 = $_POST['haslo2'];
@@ -83,10 +73,9 @@
 			$wszystko_OK=false;
 			$_SESSION['e_gr_krwi']="Wybierz grupę krwi";
 		}
-
+		$u_id = $_SESSION['u_id'];
 		//Zapamiętaj wprowadzone dane
 
-		$_SESSION['fr_email'] = $email;
 		$_SESSION['fr_haslo1'] = $haslo1;
 		$_SESSION['fr_haslo2'] = $haslo2;
 		$_SESSION['fr_imie'] = $imie;
@@ -106,16 +95,16 @@
 			}
 			else
 			{
-				//Czy email już istnieje?
-				$rezultat = $polaczenie->query("SELECT u_id FROM uzytkownicy WHERE email='$email'");
+				//Czy prośba już istnieje?
+				$rezultat = $polaczenie->query("SELECT ch_id FROM change_d WHERE u_id='$u_id'");
 
 				if (!$rezultat) throw new Exception($polaczenie->error);
 
-				$ile_takich_maili = $rezultat->num_rows;
-				if($ile_takich_maili>0)
+				$ile_takich_zmian = $rezultat->num_rows;
+				if($ile_takich_zmian>0)
 				{
 					$wszystko_OK=false;
-					$_SESSION['e_email']="Istnieje już konto przypisane do tego adresu e-mail!";
+					$_SESSION['e_imie']="Wysłałeś już prośbę o zmianę danych!";
 				}
 
 
@@ -125,11 +114,11 @@
 					$polaczenie -> query ('SET NAMES utf8');
 					$polaczenie -> query ('SET CHARACTER_SET utf8_unicode_ci');
 					$dzisiaj = date("Y-n-j");
-					if ($polaczenie->query("INSERT INTO uzytkownicy VALUES (NULL, '$pesel', '$email', '$haslo_hash','$gr_krwi', '$imie', '$nazwisko', '$dzisiaj','NULL')"))
+					if ($polaczenie->query("INSERT INTO change_d VALUES (NULL, '$u_id', '$imie', '$nazwisko', '$pesel', '$haslo_hash', '$gr_krwi', '$dzisiaj')"))
 					{
 						$_SESSION['podaj_imie']=$imie;
 						$_SESSION['udanarejestracja']=true;
-						header('Location: ../index.php?page=zarejestruj');
+						header('Location: ../index.php?page=zmien_dane');
 					}
 					else
 					{
@@ -139,7 +128,7 @@
 
 				}
 				if($wszystko_OK==false){
-					header('Location: ../index.php?page=zarejestruj');
+					header('Location: ../index.php?page=zmien_dane');
 				}
 
 				$polaczenie->close();
@@ -148,10 +137,12 @@
 		}
 		catch(Exception $e)
 		{
-			echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
+			echo '<span style="color:red;">Błąd serwera! Przepraszamy za niedogodności i prosimy spróbować innym razem!</span>';
 			echo '<br />Informacja developerska: '.$e;
 		}
 
+	}else{
+		echo 'brak';
 	}
 
 
