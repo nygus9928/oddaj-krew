@@ -1,5 +1,5 @@
 <?php
-	session_start;
+	session_start();
 	require_once "connect.php";
 
 	// Create connection
@@ -8,9 +8,12 @@
 	if ($polaczenie->connect_error) {
 			die("Connection failed: " . $polaczenie->connect_error);
 	}
-	$u_id = '10';
-	$r_id = '5';
-	$dzisiaj = date("Y-n-j");
+	if (isset($_GET['r_id']) && !isset($_SESSION['u_id'])) {
+			header('Location: ../index.php?page=odbierz_nagrode');
+	}else{
+	$u_id = $_SESSION['u_id'];
+	$r_id = $_GET['r_id'];
+	$dzisiaj = date("Y-n-j H:i:s");
 	$polaczenie -> query ('SET NAMES utf8');
 	$polaczenie -> query ('SET CHARACTER_SET utf8_unicode_ci');
 	$user = "SELECT pkt FROM uzytkownicy where u_id='$u_id'";
@@ -50,13 +53,14 @@
 
 					$nagroda = $polaczenie -> query ("INSERT INTO taken VALUES (NULL, '$u_id', '$r_id', '$dzisiaj')");
 					if (!$nagroda) throw new Exception($polaczenie->error);
-
-					echo "Udało się!";
+					$_SESSION['taken'] = '1';
+					header('Location: ../index.php?page=odbierz_nagrode');
 			}else {
-					echo "Brak wystarczającej ilości punktów";
+					$_SESSION['taken'] = '2';
+					header('Location: ../index.php?page=odbierz_nagrode');
 			}
 	}
-
+	}
 //	$pkt=$u_result-$r_result;
 //	echo $pkt;
 	//if ($u_result>=$r_result) {

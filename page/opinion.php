@@ -1,17 +1,18 @@
 <div class="col-lg-9">
-  
+
     <?php
     require_once "cnt/connect.php";
 
     // Create connection
-    $conn = new mysqli($host1, $db_user, $db_password, $db_name);
+    $polaczenie = new mysqli($host1, $db_user, $db_password, $db_name);
     // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    if ($polaczenie->connect_error) {
+        die("Connection failed: " . $polaczenie->connect_error);
     }
-
+    $polaczenie -> query ('SET NAMES utf8');
+  	$polaczenie -> query ('SET CHARACTER_SET utf8_unicode_ci');
     $sql = "SELECT imie, nazwisko, opinia, data FROM opinion JOIN uzytkownicy on opinion.u_id = uzytkownicy.u_id";
-    $result = $conn->query($sql);
+    $result = $polaczenie->query($sql);
 
     if ($result->num_rows > 0) {
         // output data of each row
@@ -29,6 +30,6 @@
     } else {
         echo "0 results";
     }
-    $conn->close();
+    $polaczenie->close();
     ?>
 </div>
