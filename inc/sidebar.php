@@ -1,6 +1,8 @@
 		<div class="col-lg-3" align="center">
 
 			<?php
+			if ($_GET['page']==odbierz_nagrode || $_GET['page']==nagrody) {
+
 					if($_SESSION['zalogowany'] == true){
 
 					require_once "cnt/connect.php";
@@ -30,6 +32,7 @@
 							echo "0 results";
 					}
 					$conn->close();
+				}
 				}
 			?>
 
