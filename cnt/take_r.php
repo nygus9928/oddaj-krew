@@ -40,7 +40,7 @@
 						$r_pkt = $row['pkt'];
 			}
 	} else {
-			echo "0 results";
+			echo "Brak nagrody";
 	}
 
 	if(!$r_result && !$u_result){
