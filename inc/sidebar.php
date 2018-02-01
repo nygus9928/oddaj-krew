@@ -8,14 +8,14 @@
 					require_once "cnt/connect.php";
 
 					// Create connection
-					$conn = new mysqli($host1, $db_user, $db_password, $db_name);
+					$polaczenie = new mysqli($host1, $db_user, $db_password, $db_name);
 					// Check connection
-					if ($conn->connect_error) {
-							die("Connection failed: " . $conn->connect_error);
+					if ($polaczenie->connect_error) {
+							die("Connection failed: " . $polaczenie->connect_error);
 					}
 					$u_id = $_SESSION['u_id'];
 					$sql = "SELECT pkt FROM uzytkownicy where u_id='$u_id'";
-					$result = $conn->query($sql);
+					$result = $polaczenie->query($sql);
 
 					if ($result->num_rows > 0) {
 							// output data of each row
@@ -31,7 +31,7 @@
 					} else {
 							echo "0 results";
 					}
-					$conn->close();
+					$polaczenie->close();
 				}
 				}
 			?>
